@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RequestParamsController {
 
     @GetMapping ("/foo")
-    public ParamDto foo (@RequestParam(required = false, defaultValue = "Adios" , name = "mensaje") String message){
+    public ParamDto foo (@RequestParam(required = false, defaultValue = "Adios" , name = "message") String message){
         ParamDto dto = new ParamDto();
         dto.setMessage(message);
         return dto;

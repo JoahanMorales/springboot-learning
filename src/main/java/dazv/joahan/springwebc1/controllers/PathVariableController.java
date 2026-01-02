@@ -2,7 +2,9 @@ package dazv.joahan.springwebc1.controllers;
 
 import dazv.joahan.springwebc1.models.User;
 import dazv.joahan.springwebc1.models.dto.ParamDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,7 +25,20 @@ public class PathVariableController {
     @Value("${config.name}")
     private String name;
 
-    @Value("#{ '${config.listOfValues}'.split(',') }")
+    @Value("#{${config.valuesMap}}")
+    private Map<String, Object> valuesMap;
+
+    @Value("#{${config.valuesMap}.product}")
+    private String product;
+
+    @Value("#{${config.valuesMap}.price}")
+    private Long price;
+
+    @Autowired
+    private Environment env;
+
+
+    @Value("#{ '${config.listOfValues}'.toUpperCase().split(',')}")
     private List<String> listValue;
 
 
@@ -51,11 +66,17 @@ public class PathVariableController {
     @GetMapping ("/values")
     public Map<String, Object> values(@Value("${config.message}") String message){
         Map<String, Object> json = new HashMap<>();
+        Long code2 = env.getProperty("config.code", Long.class);
         json.put("Name", name);
         json.put("Code", code);
         json.put("Message", message);
+        json.put("Message2", env.getProperty("config.message", ""));
+        json.put("Code2", code2);
         json.put("ListOfValues", listOfValues);
         json.put("ListOfValues2", listValue);
+        json.put("ValuesMap", valuesMap);
+        json.put("Product", product);
+        json.put("Price", price);
         return json;
     }
 }
